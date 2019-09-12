@@ -368,6 +368,9 @@ class LibcurlConan(ConanFile):
             cmake = self._configure_cmake()
             cmake.install()
 
+        if self.settings.os == "Macos" and self.options.shared:
+            self.run("find *.dylib -maxdepth 1 -type f -exec install_name_tool -id @rpath/{} {} \;", cwd=self.package_folder+"/lib")
+
         # Copy the certs to be used by client
         self.copy("cacert.pem", keep_path=False)
 
